@@ -114,9 +114,10 @@ class Question
         puts " 🗣 📞 : Hey, it's #{v1.name}. Our K-Pop shows didn't turn out a revenue. Seems like no one knows what good music is anymore. For future reference, do you have any #{v1.genres.map do |genre| genre.name end.join(" or ") } bands?"
         puts "Please enter Y/N"
         user_response = gets.chomp.downcase
+
         until user_response == "y" || user_response == "n"
             invalid_response
-            user_response = gets.chomp
+            user_response = gets.chomp.downcase
         end
 
         if user_response.downcase == "y"
@@ -180,7 +181,7 @@ class Question
         v1 = Venue.all.find_by id: b1.venue_id
         puts " 🗣 📞 : Hi! I've got tickets for #{v1.name}, but I'm not sure who's playing... Could you tell me?"
         artist = treat_input_as_artist
-        a = check_artist_is_booked_at_venue_by_artist(v1, artist)
+        a = check_artist_is_booked_at_venue(v1, artist)
         if a == 1
             puts " 🗣 📞 : Who? I've never heard of them in my life..."
             subtract_points(20.00)
@@ -199,7 +200,7 @@ class Question
         v1 = Venue.all.find_by id: b1.venue_id
         puts " 🗣 📞 : Yo. I found a ticket for #{v1.name}. Is it worth my time or should I just sell it? Who's playing?"
         artist = treat_input_as_artist
-        a = check_artist_is_booked_at_venue_by_artist(v1, artist)
+        a = check_artist_is_booked_at_venue(v1, artist)
         if a == 1
             puts " 🗣 📞 : I'm just going to sell it."
             subtract_points(20.00)
@@ -229,6 +230,21 @@ class Question
             puts " 🗣 📞 : Maybe you should consider a different career path. Or none at all. Have you considered finsihing the third grade?"
             subtract_points
         end
+    end
+
+    def self.q9
+        b = User.current.artists.sample
+        bm = b.band_members.map {|member| member.name.downcase}
+        puts " 🗣 📞 : Yo, #{User.current.name}, its #{b.name} calling. I know you're just in this for the money. If you're not, prove to me you really know us. Enter the full name of someone in this group."
+        input = gets.chomp
+        if bm.include?(input.downcase)
+            puts " 🗣 📞 : Wow... You're getting a raise!"
+            add_points
+        else
+            puts " 🗣 📞 : You're done in this town."
+            subtract_points(50.00)
+        end
+
     end
 
 end #END OF CLASS

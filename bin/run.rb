@@ -60,6 +60,7 @@ end
 break_time
 ###Level 2###
 unless User.current.artists.size > 8 
+    Question.q9
     level_2 
 end
 break_time

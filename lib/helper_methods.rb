@@ -9,20 +9,25 @@ def get_artist_name(artist, id)
     results_hash = JSON.parse(response)
     if results_hash['name']
         name = results_hash['name']
+        if name.last == ')'
+            4.times do 
+                name.chop!
+            end
+        end
     end
     name
- end     
+end
 
-def format_artist_name_for_html(name)
+
+ def format_artist_name_for_html(name)
     name.tr(' ', '+')
 end
-3
 def get_discogs_id(artist)
     i = 0
     formatted_name = format_artist_name_for_html(artist)
     response = RestClient.get "https://api.discogs.com/database/search?q=#{formatted_name}&key=RQiVIFhlSQUaqhURPhaW&secret=VHJtTwzPjtlEZUmGvUvdoAHlLaBzsqQv"
     results_hash = JSON.parse(response)
-    if results_hash["results"] == []
+    unless results_hash["results"].any?{|hash|hash["type"] == 'artist'}
         nil
     else
         until results_hash["results"][i]["type"] == 'artist'
@@ -31,6 +36,7 @@ def get_discogs_id(artist)
         results_hash["results"][i]["id"]
     end
 end
+
 def get_genre(artist, id)
     response = RestClient.get "https://api.discogs.com/artists/#{id}/releases"
     results_hash = JSON.parse(response)
@@ -129,15 +135,7 @@ def delete_save
     end
 end
 ### Populate Data ###
-def hire_act
-    act = gets.chomp
-    artists_names = User.current.artists.map{|artist|artist.name}
-    while artists_names.include?(act.split(/ |\_/).map(&:capitalize).join(" "))
-        puts 'You are already managing that act. Please input another one'
-        act = gets.chomp
-    end
-
-    act_id = get_discogs_id(act)
+def input_checker(act, act_id)
     puts 'Searching for Artist...'
     while act_id == nil
         puts 'Artist could not be found. Please check your spelling.'
@@ -145,13 +143,36 @@ def hire_act
         act_id = get_discogs_id(act)
     end
     puts 'Artist found. Getting Data...'
+end
+def check_if_user_is_already_managing(act_name, act_id)
+    artists_names = User.current.artists.map{|artist|artist.name}
+    while artists_names.include?(act_name)
+        puts 'You are already managing that act. Please input another one'
+        act = gets.chomp
+        act_id = get_discogs_id(act)
+        input_checker(act, act_id)
+        act_name = get_artist_name(act, act_id)
+    end
+end
+def hire_act
+    
+    act = gets.chomp
+    
+    act_id = get_discogs_id(act)
+    
+    input_checker(act, act_id)
+    
+    act_name = get_artist_name(act, act_id)
+    check_if_user_is_already_managing(act_name, act_id)
+    
     act_genre = get_genre(act, act_id)
-    new_artist = Artist.create(name: act.split(/ |\_/).map(&:capitalize).join(" "), genre: act_genre, user_id: User.current.id)
+    new_artist = Artist.create(name: act_name, genre: act_genre, user_id: User.current.id)
     Genre.create(name: act_genre, user_id: User.current.id)
     add_band_members(new_artist, act_id)
     User.current.save
     new_artist
 end
+
 def add_band_members(artist, id)
     band_members = get_band_members(artist.name, id)
     band_members.each do |member|
