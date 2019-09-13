@@ -10,7 +10,7 @@ class Question
         @@question_numbers
     end
     
-​
+
     def self.q0
         date = random_date
         v1 = User.current.venues.all.sample
@@ -29,7 +29,7 @@ class Question
             subtract_points
         end
     end
-​
+
     def self.q1 
         v1 = User.current.venues.all.sample
         
@@ -40,7 +40,7 @@ class Question
         invalid_response
         user_response = gets.chomp
         end
-​
+
         if user_response.downcase == "y"
             boolie = User.current.genres.include?(v1.genres[0])
             if boolie  
@@ -61,10 +61,10 @@ class Question
             end
         end
     end
-​
-​
-​
-​
+
+
+
+
     def self.q2 
         v1 = User.current.venues.all.sample
         puts " 🗣 📞 : Hey, it's #{v1.name}. We're looking to build our reputation back up ever since our Vapor-Wave phase. We're gonna need to play some #{v1.genres.map do |genre| genre.name end.join(" or ") }. Who can you give us?"
@@ -77,7 +77,7 @@ class Question
             subtract_points
         elsif a == 2 
             date = random_date
-​
+
             puts " 🗣 📞 : Wow. You are the best band manager. I'll book you in for #{date}! DON'T FORGET THE DATE! ~EXTREME!~"
             add_points
             create_booking(artist, v1, date)
@@ -86,7 +86,7 @@ class Question
             subtract_points
         end
     end
-​
+
     def self.q3 
         v1 = User.current.venues.all.sample
         puts " 🗣 📞 : Hey, it's #{v1.name}. We mostly play #{v1.genres.map do |genre| genre.name end.join(" and ") }. Who have you got for us?"
@@ -98,7 +98,7 @@ class Question
             subtract_points
         elsif a == 2 
             date = random_date
-​
+
             puts " 🗣 📞 : Wow. You are the best band manager. I'll book you in for #{date}! DON'T FORGET THE DATE! ~EXTREME!~"
             add_points
             create_booking(artist, v1, date)
@@ -107,19 +107,19 @@ class Question
             subtract_points
         end
     end
-​
+
     def self.q4 
         v1 = User.current.venues.all.sample
         
         puts " 🗣 📞 : Hey, it's #{v1.name}. Our K-Pop shows didn't turn out a revenue. Seems like no one knows what good music is anymore. For future reference, do you have any #{v1.genres.map do |genre| genre.name end.join(" or ") } bands?"
         puts "Please enter Y/N"
         user_response = gets.chomp.downcase
-​
+
         until user_response == "y" || user_response == "n"
             invalid_response
             user_response = gets.chomp.downcase
         end
-​
+
         if user_response.downcase == "y"
             boolie = User.current.genres.include?(v1.genres[0])
             if boolie  
@@ -140,8 +140,8 @@ class Question
             end
         end
     end
-​
-​
+
+
     def self.q5 ##Venue calls to ask about which artists have been booked##
         b1 = User.current.bookings.sample
         v1 = Venue.all.find_by id: b1.venue_id
@@ -152,7 +152,7 @@ class Question
                 invalid_response
                 answer = gets.chomp
             end
-​
+
             if answer == 'y'
                 puts " 🗣 📞 : Super. And which act was that?"
                 artist = treat_input_as_artist
@@ -174,12 +174,12 @@ class Question
                 
             end
     end
-​
-​
+
+
     def self.q6 ##person calls to ask about which artists have been booked##
         b1 = User.current.bookings.sample
         v1 = Venue.all.find_by id: b1.venue_id
-        puts " 🗣 📞 : Hi! I've got tickets for #{v1.name}, but I'm not sure who's playing... Could you tell me? It's for #{b1.date}"
+        puts " 🗣 📞 : Hi! I've got tickets for #{v1.name}, but I'm not sure who's playing... Could you tell me?"
         artist = treat_input_as_artist
         a = check_artist_is_booked_at_venue(v1, artist)
         if a == 1
@@ -194,11 +194,11 @@ class Question
             subtract_points(20.00)
         end
     end
-​
+
     def self.q7 ##person calls to ask about which artists have been booked##
         b1 = User.current.bookings.sample
         v1 = Venue.all.find_by id: b1.venue_id
-        puts " 🗣 📞 : Yo. I found a ticket for #{v1.name} on #{b1.date}. The artist doesn't show. Who's playing?"
+        puts " 🗣 📞 : Yo. I found a ticket for #{v1.name}. Is it worth my time or should I just sell it? Who's playing?"
         artist = treat_input_as_artist
         a = check_artist_is_booked_at_venue(v1, artist)
         if a == 1
@@ -208,17 +208,17 @@ class Question
             puts " 🗣 📞 : Lit! #{artist.name} is swagtastic!!"
             add_points(20.00)
         elsif a == 3
-            puts " 🗣 📞 : Pffft. #{artist.name}? Would never play at #{v1.name}! What kind of manager are you? 🤣"
+            puts " 🗣 📞 : Pffft. #{artist.name}? At #{v1.name}? Now I know why this was on the ground 🤣"
             subtract_points(20.00)
         end
     end
-​
+
      
     def self.q8
         b1 = User.current.bookings.sample
         v1 = Venue.all.find_by id: b1.venue_id
         puts " 🗣 📞 : Hey, its #{v1.name}. We have #{b1.artist.name} booked but we can't remember when. Can you remind us?"
-        puts "Please enter in 'day, month, date' format"
+        puts "Please enter in 'day, month, date' format (only 3 letters for the day)"
         puts "For example, your input could be 'Thu Oct 25'"
         input = gets.chomp
         format_user_date(input)
@@ -230,7 +230,7 @@ class Question
             subtract_points
         end
     end
-​
+
     def self.q9
         b = User.current.artists.sample
         bm = b.band_members.map {|member| member.name.downcase}
@@ -239,15 +239,13 @@ class Question
         if bm.include?(input.downcase)
             puts " 🗣 📞 : Wow... You're getting a raise!"
             add_points
-            end_break
         else
             puts " 🗣 📞 : You're done in this town."
             subtract_points(50.00)
-            end_break
         end
-​
+
     end
-​
+
     def self.q10
         b = User.current.bookings.sample
         a = b.artist
@@ -265,7 +263,7 @@ class Question
             subtract_points(30.00)
         end
     end
-​
+    
     def self.q11
         b1 = User.current.bookings.sample
         v1 = Venue.all.find_by id: b1.venue_id
@@ -286,5 +284,7 @@ class Question
             subtract_points(35)
         end
     end
-​
+
 end #END OF CLASS
+
+
