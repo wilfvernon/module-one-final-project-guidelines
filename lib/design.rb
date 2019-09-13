@@ -37,8 +37,8 @@ puts design1.colorize(:cyan)
 end
 
 def intro
-#  pid = fork{ exec 'afplay', "media/welcome.wav" }
-#  pid = fork{ exec 'afplay', 'media/peaches_loop.wav' }
+ pid = fork{ exec 'afplay', "media/welcome.wav" }
+ pid = fork{ exec 'afplay', 'media/peaches_loop.wav' }
 puts "Welcome to..."
 design_1
 end

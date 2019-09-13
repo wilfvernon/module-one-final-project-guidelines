@@ -1,4 +1,4 @@
-# require_relative '../config/environment'
+ # require_relative '../config/environment'
 # require 'pry'
 # ActiveRecord::Base.logger.level = 1 
 
@@ -60,7 +60,6 @@ end
 break_time
 ###Level 2###
 unless User.current.artists.size > 8 
-    Question.q9
     level_2 
 end
 break_time
@@ -68,5 +67,3 @@ break_time
 unless User.current.artists.size > 12
     level_3
 end
-
-end_message

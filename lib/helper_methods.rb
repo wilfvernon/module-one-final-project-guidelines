@@ -72,9 +72,15 @@ end
 def new_game
     puts "Please enter your name"
     user = gets.chomp
-    while User.names.include?(user.downcase)
-        puts 'Sorry, that name is already taken, please enter another'
-        user = gets.chomp
+    if user.downcase == 'pongo' || user.downcase == 'max'
+        pid = fork{ exec 'killall', 'afplay' }
+        system "clear"
+        dog_game
+    else
+        while User.names.include?(user.downcase)
+            puts 'Sorry, that name is already taken, please enter another'
+            user = gets.chomp
+        end
     end
     User.current = create_new_user(user.downcase)
 end
@@ -100,12 +106,18 @@ end
 def load_game
     puts "Please enter your name"
     user = gets.chomp
-    unless User.names.include?(user.downcase)
-        puts 'Sorry, that save file does not exist'
-        start_menu
+    if user.downcase == 'pongo' || user.downcase == 'max'
+        pid = fork{ exec 'killall', 'afplay' }
+        system "clear"
+        dog_game
     else
-        User.current = User.all.find_by name: user.downcase
-        puts "Welcome back, #{User.current.formatted_name}"
+        unless User.names.include?(user.downcase)
+            puts 'Sorry, that save file does not exist'
+            start_menu
+        else
+            User.current = User.all.find_by name: user.downcase
+            puts "Welcome back, #{User.current.formatted_name}"
+        end
     end
 end
 def delete_save
@@ -181,10 +193,8 @@ def add_band_members(artist, id)
 end
 def new_venue_name_checker
     name = VenueName.names.sample
-    if User.current.venues.any?{|venue| venue.name == name} == true
-        while User.current.venues.any?{|venue| venue.name == name} == true
-            name = VenueName.names.sample
-        end
+    while User.current.venues.any?{|venue| venue.name == name} == true
+        name = VenueName.names.sample
     end
     name
 end
@@ -246,7 +256,7 @@ end
 def treat_input_as_artist
     puts "Please enter an artist"
     input = gets.chomp.downcase.split(/ |\_/).map(&:capitalize).join(" ")
-    Artist.find_by name: input, user_id: User.current.id
+    User.current.artists.find{|artist|artist.name.downcase == input}
 end
 def check_artist_genre_is_right_for_venue(artist, venue)
     if artist == nil
@@ -290,24 +300,14 @@ def check_artist_is_right_for_date(artist, venue, date)
         end
     end
 end
-def check_artist_is_booked_at_venue(venue, artist)
-    if artist == nil
-        1 ##User has no artists with the same name as input##
-    else
-        if artist.bookings.any?{|booking|booking.venue_id == venue.id}
-            2 ## Correct Answer ##
-         else
-            3 ##Artist has no bookings at venue##
-        end
-    end
-end
+
 ##User inputs venue##
 def treat_input_as_venue
     input = gets.chomp.downcase.split(/ |\_/).map(&:capitalize).join(" ")
     Venue.find_by name: input, user_id: User.current.id
 end
 def check_artist_is_booked_at_venue(venue, artist)
-    if venue == nil
+    if venue == nil || artist == nil
         1 ##User has no artists with the same name as input##
     else
         if artist.bookings.any?{|booking|booking.venue_id == venue.id}
@@ -438,7 +438,19 @@ end
 
 
 def format_user_date(input)
-    if input.length < 10
-        user_date[7] = "  "
+    if input.length < 8
+        nil
+    elsif input.length < 10
+        input[7] = "  "
+    end
+end
+
+def end_message
+    puts "CONGRATULATIONS! You've made it this far without going broke. You are an..."
+       sleep(3)
+    design_1
+    input = end_break
+    if input
+        abort
     end
 end

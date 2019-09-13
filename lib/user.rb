@@ -27,6 +27,19 @@ class User < ActiveRecord::Base
         table.to_s
     end
 
+    def dog_artist_table
+        user = self.reload
+        table = Text::Table.new
+        table.head = ["Bark", "Bark", "Bark"]
+        table.rows = [[user.artists[0].name.split.map{|word| word = 'bark'}.join(' '), user.artists[0].genre.split.map{|word| word = 'bark'}.join(' '), (user.artists[0].band_members[0..6].map{|member|member.name}.map{|name| name = 'bark'}).join(', ')]]
+        i = 1
+        (user.artists.size - 1).times do
+            table.rows << [user.artists[i].name.split.map{|word| word = 'bark'}.join(' '), user.artists[i].genre.split.map{|word| word = 'bark'}.join(' '), (user.artists[i].band_members[0..6].map{|member|member.name}.map{|name| name = 'bark'}).join(', ')]
+            i += 1
+        end
+        table.to_s
+    end
+
     def venue_table
         user = self.reload
         table = Text::Table.new
@@ -40,6 +53,19 @@ class User < ActiveRecord::Base
         table.to_s
     end
 
+    def dog_venue_table
+        user = self.reload
+        table = Text::Table.new
+        table.head = ["Bark", "Bark"]
+        table.rows = [[user.venues[0].name.split.map{|word| word = 'bark'}.join(' '), user.venues[0].genres.map{|genre| genre.name}.map{|word| word = 'bark'}.join(', ')]]
+        i = 1
+        (user.venues.size - 1).times do
+            table.rows << [user.venues[i].name.split.map{|word| word = 'bark'}.join(' '), user.venues[i].genres.map{|genre| genre.name}.map{|word| word = 'bark'}.join(', ')]
+            i += 1
+        end
+        table.to_s
+    end
+
     def booking_table
         user = self.reload
         table = Text::Table.new
@@ -48,6 +74,19 @@ class User < ActiveRecord::Base
         i = 1
         (user.bookings.size - 1).times do
             table.rows << [user.bookings[i].artist.name, user.bookings[i].venue.name, user.bookings[i].date]
+            i += 1
+        end
+        table.to_s
+    end
+
+    def dog_booking_table
+        user = self.reload
+        table = Text::Table.new
+        table.head = ["Bark", "Bark", "Bark"]
+        table.rows = [[user.bookings[0].artist.name.split.map{|word| word = 'bark'}.join(' '), user.bookings[0].venue.name.split.map{|word| word = 'bark'}.join(' '), user.bookings[0].date.split.map{|word| word = 'bark'}.join(' ')]]
+        i = 1
+        (user.bookings.size - 1).times do
+            table.rows << [user.bookings[i].artist.name.split.map{|word| word = 'bark'}.join(' '), user.bookings[i].venue.name.split.map{|word| word = 'bark'}.join(' '), user.bookings[i].date.split.map{|word| word = 'bark'}.join(' ')]
             i += 1
         end
         table.to_s
