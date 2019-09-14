@@ -15,7 +15,7 @@ def get_artist_name(artist, id)
             end
         end
     end
-    name
+    name.strip
 end
 
 
@@ -193,11 +193,13 @@ def add_band_members(artist, id)
 end
 def new_venue_name_checker
     name = VenueName.names.sample
-    while User.current.venues.any?{|venue| venue.name == name} == true
+    venue_list = User.current.venues.reload
+    while venue_list.any?{|venue| venue.name == name} == true
         name = VenueName.names.sample
     end
     name
 end
+
 def generate_venue
     venue_name = new_venue_name_checker
     new_venue = Venue.create(name: venue_name, user_id: User.current.id)
@@ -255,7 +257,7 @@ end
 ## User inputs artist ##
 def treat_input_as_artist
     puts "Please enter an artist"
-    input = gets.chomp.downcase.split(/ |\_/).map(&:capitalize).join(" ")
+    input = gets.chomp.downcase
     User.current.artists.find{|artist|artist.name.downcase == input}
 end
 def check_artist_genre_is_right_for_venue(artist, venue)
@@ -303,8 +305,8 @@ end
 
 ##User inputs venue##
 def treat_input_as_venue
-    input = gets.chomp.downcase.split(/ |\_/).map(&:capitalize).join(" ")
-    Venue.find_by name: input, user_id: User.current.id
+    input = gets.chomp.downcase
+    User.current.venues.find{|venue|venue.name.downcase == input}
 end
 def check_artist_is_booked_at_venue(venue, artist)
     if venue == nil || artist == nil

@@ -1,6 +1,7 @@
 def dog_game
+    sleep(2)
     dog_intro
-    sleep(5)
+    sleep(3)
     dog_start_menu
     unless User.current.artists.size > 0
         dog_welcome_message

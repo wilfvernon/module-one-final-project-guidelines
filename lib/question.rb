@@ -38,7 +38,7 @@ class Question
         user_response = gets.chomp.downcase
         until user_response == "y" || user_response == "n"
         invalid_response
-        user_response = gets.chomp
+        user_response = gets.chomp.downcase
         end
 
         if user_response.downcase == "y"
@@ -147,10 +147,10 @@ class Question
         v1 = Venue.all.find_by id: b1.venue_id
             puts " 🗣 📞 : Hey, just calling from #{v1.name} again. Can you just remind me if we've booked any of your acts?"
             puts "Type 'y' or 'n'."
-            answer = gets.chomp
+            answer = gets.chomp.downcase
             until answer == 'y' || answer == 'n'
                 invalid_response
-                answer = gets.chomp
+                answer = gets.chomp.downcase
             end
 
             if answer == 'y'
@@ -220,9 +220,9 @@ class Question
         puts " 🗣 📞 : Hey, its #{v1.name}. We have #{b1.artist.name} booked but we can't remember when. Can you remind us?"
         puts "Please enter in 'day, month, date' format (only 3 letters for the day)"
         puts "For example, your input could be 'Thu Oct 25'"
-        input = gets.chomp
+        input = gets.chomp.downcase
         format_user_date(input)
-        if input == b1.date
+        if input == b1.date.downcase
             puts " 🗣 📞 : Wow, I can't believe you knew that off the top of your head. You're the most EXTREME, RADICAL band manager ever."
             add_points
         else
@@ -271,9 +271,9 @@ class Question
         input = gets.chomp
         if input.downcase == v1.name.downcase
             puts "Great! What date would that be?"
-            input = gets.chomp
+            input = gets.chomp.downcase
             format_user_date(input)
-            if input == b1.date
+            if input == b1.date.downcase
                 puts " 🗣 📞 : You're the best, thanks."
                 add_points
             else

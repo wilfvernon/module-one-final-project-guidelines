@@ -34,7 +34,7 @@ puts dog_design.colorize(:cyan)
 end
 
 def dog_intro
-    # pid = fork{ exec 'afplay', 'media/dogsong.wav' }
+    pid = fork{ exec 'afplay', 'media/dogsong.wav' }
    dog_design
 end
    

@@ -11,8 +11,9 @@ def level_1
     puts "Congrats on your new EXTREME job! You've had a pretty easy start. Why don't you hire some more artists?"
     puts "Enter an artist/band you'd like to hire."
     hire_act
-    puts "Awesome. Take a quick second to recall all the information you've given out. Here comes your next round..."   
+    puts "Awesome."
     end_break
+    screen_clear
 end
 
 def level_2
